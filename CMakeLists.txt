@@ -9,6 +9,10 @@ find_package(Eigen3 REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+option(BUILD_SAMPLES "build samples (need OpenCV)" ON)
+option(BUILD_TESTS "build tests (need GTest)" ON)
+option(BUILD_BENCHMARKS "build benchmarks (need Google Benchmark)" ON)
+
 # common dependencies
 add_library(common_depends INTERFACE)
 target_include_directories(common_depends INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -19,11 +23,17 @@ target_link_libraries(common_depends INTERFACE Eigen3::Eigen)
 cuda_add_library(kdtree_cuda kdtree_cuda.cu)
 
 # samples
-add_subdirectory(samples)
+if (BUILD_SAMPLES)
+    add_subdirectory(samples)
+endif ()
 
 # tests
-enable_testing()
-add_subdirectory(tests)
+if (BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif ()
 
 # benchmark
-add_subdirectory(benchmarks)
+if (BUILD_BENCHMARKS)
+    add_subdirectory(benchmarks)
+endif ()
